@@ -9,6 +9,7 @@ import ProtectedRoute from './components/ProtectedRoute'
 import AuthCallback from './components/AuthCallback'
 import RateMeals from './components/RateMeals'
 import RateMealForm from './components/RateMealForm'
+import ErrorBoundary from './components/ErrorBoundary'
 
 // Layout wrapper that includes side images
 const LayoutWithSideImages = () => {
