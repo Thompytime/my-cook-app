@@ -92,29 +92,23 @@ function App() {
       </nav>
 
       {/* Routes wrapped in LayoutWithSideImages */}
+      <ErrorBoundary>
       <Routes>
-        <Route element={<LayoutWithSideImages />}>
-          {/* Protected home route */}
-          <Route
-            path="/"
-            element={
-              <ProtectedRoute>
-                <Home />
-              </ProtectedRoute>
-            }
-          />
+  <Route element={<LayoutWithSideImages />}>
+    {/* Protected Home */}
+    <Route path="/" element={<ProtectedRoute><Home /></ProtectedRoute>} />
 
-          {/* Public routes */}
-          <Route path="/login" element={!user ? <Login /> : <Navigate to="/" />} />
-          <Route
-            path="/register"
-            element={!user ? <Register /> : <Navigate to="/" />}
-          />
-          <Route path="/auth/callback" element={<AuthCallback />} />
-          <Route path="/rate" element={<ProtectedRoute><RateMeals /></ProtectedRoute>} />
-          <Route path="/rate/:id" element={<ProtectedRoute><RateMealForm /></ProtectedRoute>} />
-        </Route>
-      </Routes>
+    {/* Protected Rate Meals Page */}
+    <Route path="/rate" element={<ProtectedRoute><RateMeals /></ProtectedRoute>} />
+    <Route path="/rate/:id" element={<ProtectedRoute><RateMealForm /></ProtectedRoute>} />
+
+    {/* Public Routes */}
+    <Route path="/login" element={!user ? <Login /> : <Navigate to="/" />} />
+    <Route path="/register" element={!user ? <Register /> : <Navigate to="/" />} />
+    <Route path="/auth/callback" element={<AuthCallback />} />
+  </Route>
+</Routes>
+</ErrorBoundary>
     </div>
   )
 }

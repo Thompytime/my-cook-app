@@ -35,21 +35,24 @@ export const AuthProvider = ({ children }) => {
     const { data: authListener } = supabase.auth.onAuthStateChange(
       async (_event, session) => {
         const currentUser = session?.user ?? null
+        console.log("User:", currentUser) // 👈 Log current user
+        console.log("Session event:", _event) // 👈 Log event type
+    
         setUser(currentUser)
         setUsername(null)
-
+    
         if (currentUser) {
           const { data: profileData, error } = await supabase
             .from('profiles')
             .select('username')
             .eq('id', currentUser.id)
             .single()
-
+    
           if (!error && profileData?.username) {
             setUsername(profileData.username)
           }
         }
-
+    
         setLoading(false)
       }
     )
