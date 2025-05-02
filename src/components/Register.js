@@ -1,17 +1,41 @@
 // src/components/Register.js
 import React from 'react'
-import { supabase } from '../supabaseClient'
 import { useNavigate } from 'react-router-dom'
+import { supabase } from '../supabaseClient'
 
 const Register = () => {
   const [email, setEmail] = React.useState('')
   const [password, setPassword] = React.useState('')
+  const [username, setUsername] = React.useState('')
   const navigate = useNavigate()
 
   const handleRegister = async (e) => {
     e.preventDefault()
+
     const { error } = await supabase.auth.signUp({ email, password })
+
     if (!error) {
+      // Get current user
+      const { data: authUser } = await supabase.auth.getUser()
+      const userId = authUser?.user?.id
+
+      if (userId) {
+        // Save profile to Supabase
+        const { error: profileError } = await supabase
+          .from('profiles')
+          .insert({
+            id: userId,
+            username: username,
+            email: email,
+            created_at: new Date(),
+          })
+
+        if (profileError) {
+          alert("Could not save username")
+          return
+        }
+      }
+
       alert('Check your email for confirmation!')
       navigate('/login')
     } else {
@@ -23,6 +47,13 @@ const Register = () => {
     <div className="registration-form">
       <h2>Register</h2>
       <form onSubmit={handleRegister}>
+        <input
+          type="text"
+          placeholder="Username"
+          value={username}
+          onChange={(e) => setUsername(e.target.value)}
+          required
+        />
         <input
           type="email"
           placeholder="Email"
