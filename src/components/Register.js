@@ -1,3 +1,4 @@
+// src/components/Register.js
 import React from 'react'
 import { supabase } from '../supabaseClient'
 import { useNavigate } from 'react-router-dom'
@@ -19,7 +20,7 @@ const Register = () => {
   }
 
   return (
-    <div className="form-container">
+    <div className="registration-form">
       <h2>Register</h2>
       <form onSubmit={handleRegister}>
         <input
@@ -39,7 +40,6 @@ const Register = () => {
         <button type="submit">Sign Up</button>
       </form>
 
-      {/* New Button */}
       <p>
         Already have an account?{' '}
         <button onClick={() => navigate('/login')} style={{ background: 'none', color: '#3498db', cursor: 'pointer' }}>

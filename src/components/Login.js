@@ -1,3 +1,4 @@
+// src/components/Login.js
 import React from 'react'
 import { supabase } from '../supabaseClient'
 import { useNavigate } from 'react-router-dom'
@@ -18,7 +19,7 @@ const Login = () => {
   }
 
   return (
-    <div className="form-container">
+    <div className="login-form">
       <h2>Login</h2>
       <form onSubmit={handleLogin}>
         <input
@@ -38,7 +39,6 @@ const Login = () => {
         <button type="submit">Login</button>
       </form>
 
-      {/* New Button */}
       <p>
         Don't have an account?{' '}
         <button onClick={() => navigate('/register')} style={{ background: 'none', color: '#3498db', cursor: 'pointer' }}>
