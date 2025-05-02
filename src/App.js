@@ -7,6 +7,8 @@ import Login from './components/Login'
 import Register from './components/Register'
 import ProtectedRoute from './components/ProtectedRoute'
 import AuthCallback from './components/AuthCallback'
+import RateMeals from './components/RateMeals'
+import RateMealForm from './components/RateMealForm'
 
 // Layout wrapper that includes side images
 const LayoutWithSideImages = () => {
@@ -109,6 +111,8 @@ function App() {
             element={!user ? <Register /> : <Navigate to="/" />}
           />
           <Route path="/auth/callback" element={<AuthCallback />} />
+          <Route path="/rate" element={<ProtectedRoute><RateMeals /></ProtectedRoute>} />
+          <Route path="/rate/:id" element={<ProtectedRoute><RateMealForm /></ProtectedRoute>} />
         </Route>
       </Routes>
     </div>

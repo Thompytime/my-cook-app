@@ -150,3 +150,20 @@ input {
     padding: 0 1rem;
   }
 }
+
+.home-buttons {
+  margin-top: 2rem;
+  text-align: center;
+}
+
+.rate-meals-button {
+  display: inline-block;
+  padding: 1rem 2rem;
+  background-color: #3498db;
+  color: white;
+  border: none;
+  border-radius: 5px;
+  font-size: 1.2rem;
+  cursor: pointer;
+  text-decoration: none;
+}

@@ -1,5 +1,6 @@
 // src/components/Home.js
 import React from 'react'
+import { Link } from 'react-router-dom'
 import { AuthContext } from '../contexts/AuthContext'
 import { supabase } from '../supabaseClient'
 
@@ -29,12 +30,20 @@ const Home = () => {
 
   return (
     <div className="home">
-      <h1>Welcome to COOK Meals Rankings</h1>
+      <h1>COOK Meals Rankings</h1>
       {user && (
-  <h2>
-    Hi, {username ? username : '...'}! Welcome to your COOK Meals Rankings Account
-  </h2>
-)}
+        <h2>
+          Hi, {username ? username : '...'}! Welcome back to your COOK Meals Rankings Account
+        </h2>
+      )}
+  
+      {user && (
+        <div className="home-buttons">
+          <Link to="/rate" className="rate-meals-button">
+            Rate Meals
+          </Link>
+        </div>
+      )}
     </div>
   )
 }
