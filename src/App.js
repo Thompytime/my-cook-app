@@ -75,7 +75,7 @@ function App() {
         <div>
           {user ? (
             <>
-              <span style={{ marginRight: 10 }}>Hi, {user.email}</span>
+              <span style={{ marginRight: 10 }}>Hi, {username ? username : '...'}</span>
               <button onClick={handleLogout}>Logout</button>
             </>
           ) : (
