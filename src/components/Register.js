@@ -12,17 +12,34 @@ const Register = () => {
   const handleRegister = async (e) => {
     e.preventDefault()
 
+    // Step 1: Sign up user
     const { data, error } = await supabase.auth.signUp({ email, password })
 
     if (error) {
-      alert(error.message)
+      alert(`Registration failed: ${error.message}`)
       return
     }
 
     if (data?.user) {
-      const userId = data.user.id
+      let currentUser = null
+      let tries = 0
 
-      // Insert profile into Supabase
+      // Step 2: Wait for Supabase auth session to be ready
+      while (!currentUser && tries < 5) {
+        const { data: userData } = await supabase.auth.getUser()
+        currentUser = userData?.user
+        tries++
+        if (!currentUser) await new Promise((res) => setTimeout(res, 1000)) // wait 1s
+      }
+
+      if (!currentUser) {
+        alert("Authentication timed out. Please try again.")
+        return
+      }
+
+      const userId = currentUser.id
+
+      // Step 3: Insert profile into Supabase
       const { error: profileError } = await supabase
         .from('profiles')
         .insert({
@@ -33,11 +50,12 @@ const Register = () => {
         })
 
       if (profileError) {
-        alert("Could not save your profile")
-        console.error(profileError)
+        console.error('Profile insert error:', profileError)
+        alert(`Could not save your profile: ${profileError.message}`)
         return
       }
 
+      // Step 4: Success!
       alert('Check your email for confirmation!')
       navigate('/login')
     }
