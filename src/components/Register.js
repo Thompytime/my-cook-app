@@ -1,65 +1,46 @@
 // src/components/Register.js
-import React from 'react'
-import { useNavigate } from 'react-router-dom'
-import { supabase } from '../supabaseClient'
+import React from 'react';
+import { useNavigate } from 'react-router-dom';
+import { supabase } from '../supabaseClient';
 
 const Register = () => {
-  const [email, setEmail] = React.useState('')
-  const [password, setPassword] = React.useState('')
-  const [username, setUsername] = React.useState('')
-  const navigate = useNavigate()
+  const [email, setEmail] = React.useState('');
+  const [password, setPassword] = React.useState('');
+  const [username, setUsername] = React.useState(''); // Keep username state if needed elsewhere, or remove if only for profile
+  const navigate = useNavigate();
 
   const handleRegister = async (e) => {
-    e.preventDefault()
+    e.preventDefault();
 
-    // Step 1: Sign up user
-    const { data, error } = await supabase.auth.signUp({ email, password })
+    // Step 1: Sign up the user
+    // We pass the username in the 'options.data' field.
+    // This data will be available in the 'new' record inside a database trigger function.
+    const { data, error } = await supabase.auth.signUp({
+      email,
+      password,
+      options: {
+        data: {
+          username: username, // Pass username here
+        },
+      },
+    });
 
     if (error) {
-      alert(`Registration failed: ${error.message}`)
-      return
+      alert(`Registration failed: ${error.message}`);
+      return;
     }
 
+    // If signUp is successful (data.user exists), prompt for email confirmation.
+    // The profile creation logic is now removed from here.
     if (data?.user) {
-      let currentUser = null
-      let tries = 0
-
-      // Step 2: Wait for Supabase auth session to be ready
-      while (!currentUser && tries < 5) {
-        const { data: userData } = await supabase.auth.getUser()
-        currentUser = userData?.user
-        tries++
-        if (!currentUser) await new Promise((res) => setTimeout(res, 1000)) // wait 1s
-      }
-
-      if (!currentUser) {
-        alert("Authentication timed out. Please try again.")
-        return
-      }
-
-      const userId = currentUser.id
-
-      // Step 3: Insert profile into Supabase
-      const { error: profileError } = await supabase
-        .from('profiles')
-        .insert({
-          id: userId,
-          username: username,
-          email: email,
-          created_at: new Date(),
-        })
-
-      if (profileError) {
-        console.error('Profile insert error:', profileError)
-        alert(`Could not save your profile: ${profileError.message}`)
-        return
-      }
-
-      // Step 4: Success!
-      alert('Check your email for confirmation!')
-      navigate('/login')
+      alert('Check your email for confirmation!');
+      navigate('/login'); // Redirect to login page after sign up request
+    } else if (!error) {
+       // Handle cases where sign up doesn't return a user but also no error (might indicate email confirmation needed)
+       alert('Check your email for confirmation link!');
+       navigate('/login');
     }
-  }
+  };
 
   return (
     <div className="registration-form">
@@ -71,6 +52,7 @@ const Register = () => {
           value={username}
           onChange={(e) => setUsername(e.target.value)}
           required
+          autoComplete="username"
         />
         <input
           type="email"
@@ -98,7 +80,7 @@ const Register = () => {
         </button>
       </p>
     </div>
-  )
-}
+  );
+};
 
-export default Register
+export default Register;
