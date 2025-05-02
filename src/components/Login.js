@@ -37,6 +37,14 @@ const Login = () => {
         />
         <button type="submit">Login</button>
       </form>
+
+      {/* New Button */}
+      <p>
+        Don't have an account?{' '}
+        <button onClick={() => navigate('/register')} style={{ background: 'none', color: '#3498db', cursor: 'pointer' }}>
+          Create new account
+        </button>
+      </p>
     </div>
   )
 }

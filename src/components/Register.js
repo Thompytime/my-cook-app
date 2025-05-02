@@ -38,6 +38,14 @@ const Register = () => {
         />
         <button type="submit">Sign Up</button>
       </form>
+
+      {/* New Button */}
+      <p>
+        Already have an account?{' '}
+        <button onClick={() => navigate('/login')} style={{ background: 'none', color: '#3498db', cursor: 'pointer' }}>
+          Log in
+        </button>
+      </p>
     </div>
   )
 }
