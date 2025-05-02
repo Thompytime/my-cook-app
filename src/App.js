@@ -6,6 +6,7 @@ import Home from './components/Home'
 import Login from './components/Login'
 import Register from './components/Register'
 import ProtectedRoute from './components/ProtectedRoute'
+import AuthCallback from './components/AuthCallback'
 
 // Layout wrapper that includes side images
 const LayoutWithSideImages = () => {
@@ -105,6 +106,7 @@ function App() {
             path="/register"
             element={!user ? <Register /> : <Navigate to="/" />}
           />
+          <Route path="/auth/callback" element={<AuthCallback />} />
         </Route>
       </Routes>
     </div>

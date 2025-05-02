@@ -31,10 +31,10 @@ const Home = () => {
     <div className="home">
       <h1>Welcome to COOK Meals Rankings</h1>
       {user && (
-        <h2>
-          Hi, {username || 'User'}! Welcome to your COOK Meals Rankings Account
-        </h2>
-      )}
+  <h2>
+    Hi, {username ? username : '...'}! Welcome to your COOK Meals Rankings Account
+  </h2>
+)}
     </div>
   )
 }

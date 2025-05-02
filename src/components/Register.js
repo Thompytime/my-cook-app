@@ -12,34 +12,34 @@ const Register = () => {
   const handleRegister = async (e) => {
     e.preventDefault()
 
-    const { error } = await supabase.auth.signUp({ email, password })
+    const { data, error } = await supabase.auth.signUp({ email, password })
 
-    if (!error) {
-      // Get current user
-      const { data: authUser } = await supabase.auth.getUser()
-      const userId = authUser?.user?.id
+    if (error) {
+      alert(error.message)
+      return
+    }
 
-      if (userId) {
-        // Save profile to Supabase
-        const { error: profileError } = await supabase
-          .from('profiles')
-          .insert({
-            id: userId,
-            username: username,
-            email: email,
-            created_at: new Date(),
-          })
+    if (data?.user) {
+      const userId = data.user.id
 
-        if (profileError) {
-          alert("Could not save username")
-          return
-        }
+      // Insert profile into Supabase
+      const { error: profileError } = await supabase
+        .from('profiles')
+        .insert({
+          id: userId,
+          username: username,
+          email: email,
+          created_at: new Date(),
+        })
+
+      if (profileError) {
+        alert("Could not save your profile")
+        console.error(profileError)
+        return
       }
 
       alert('Check your email for confirmation!')
       navigate('/login')
-    } else {
-      alert(error.message)
     }
   }
 
