@@ -6,21 +6,50 @@ export const AuthContext = createContext()
 export const AuthProvider = ({ children }) => {
   const [user, setUser] = useState(null)
   const [loading, setLoading] = useState(true)
+  const [username, setUsername] = useState(null)
 
   useEffect(() => {
-    // Get current user on load
     const getInitialUser = async () => {
       const { data } = await supabase.auth.getUser()
-      setUser(data?.user ?? null)
+      const currentUser = data?.user ?? null
+      setUser(currentUser)
+      
+      if (currentUser) {
+        // Fetch username from profiles table
+        const { data: profileData, error } = await supabase
+          .from('profiles')
+          .select('username')
+          .eq('id', currentUser.id)
+          .single()
+
+        if (!error && profileData?.username) {
+          setUsername(profileData.username)
+        }
+      }
+
       setLoading(false)
     }
 
     getInitialUser()
 
-    // Listen for auth changes
     const { data: authListener } = supabase.auth.onAuthStateChange(
-      (_event, session) => {
-        setUser(session?.user ?? null)
+      async (_event, session) => {
+        const currentUser = session?.user ?? null
+        setUser(currentUser)
+        setUsername(null)
+
+        if (currentUser) {
+          const { data: profileData, error } = await supabase
+            .from('profiles')
+            .select('username')
+            .eq('id', currentUser.id)
+            .single()
+
+          if (!error && profileData?.username) {
+            setUsername(profileData.username)
+          }
+        }
+
         setLoading(false)
       }
     )
@@ -30,7 +59,7 @@ export const AuthProvider = ({ children }) => {
     }
   }, [])
 
-  const value = { user, loading }
+  const value = { user, loading, username }
 
   return (
     <AuthContext.Provider value={value}>

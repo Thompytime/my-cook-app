@@ -57,7 +57,7 @@ const LayoutWithSideImages = () => {
   )
 }
 function App() {
-  const { user, loading } = React.useContext(AuthContext)
+  const { user, loading, username } = React.useContext(AuthContext)
   const navigate = useNavigate()
 
   const handleLogout = async () => {
@@ -73,17 +73,19 @@ function App() {
       <nav>
         <h2>COOK Meals Rankings</h2>
         <div>
-          {user ? (
-            <>
-              <span style={{ marginRight: 10 }}>Hi, {username ? username : '...'}</span>
-              <button onClick={handleLogout}>Logout</button>
-            </>
-          ) : (
-            <>
-              <Link to="/register">Register</Link>
-              <Link to="/login">Login</Link>
-            </>
-          )}
+        {user ? (
+        <>
+          <span style={{ marginRight: 10 }}>
+            Hi, {username ? username : '...'}
+          </span>
+          <button onClick={handleLogout}>Logout</button>
+        </>
+      ) : (
+        <>
+          <Link to="/register">Register</Link>
+          <Link to="/login">Login</Link>
+        </>
+      )}
         </div>
       </nav>
 
