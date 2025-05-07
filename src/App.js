@@ -23,7 +23,10 @@ const LayoutWithSideImages = ({ user, handleLogout }) => {
         <img src="/cooklogo.png" alt="COOK Logo" className="top-logo" />
 
         {user && (
-          <button onClick={handleLogout} className="logout-button">
+          <button
+            onClick={handleLogout}
+            className="logout-button"
+          >
             Logout
           </button>
         )}
@@ -95,21 +98,23 @@ function App() {
         </div>
       </nav>
 
-      {/* Routes wrapped in LayoutWithSideImages */}
+      {/* All routes use the same layout */}
       <Routes>
-        <Route element={<LayoutWithSideImages user={user} handleLogout={handleLogout} />}>
-          {/* Protected Home */}
-          <Route path="/" element={<ProtectedRoute><Home /></ProtectedRoute>} />
-
-          {/* Protected Rate Meals Page */}
+        <Route
+          element={
+            <LayoutWithSideImages user={user} handleLogout={handleLogout} />
+          }
+        >
+          {/* Protected Routes */}
+          <Route index element={<ProtectedRoute><Home /></ProtectedRoute>} />
           <Route path="/rate" element={<ProtectedRoute><RateMeals /></ProtectedRoute>} />
           <Route path="/rate/:id" element={<ProtectedRoute><RateMealForm /></ProtectedRoute>} />
-        </Route>
 
-        {/* Public Routes */}
-        <Route path="/login" element={!user ? <Login /> : <Navigate to="/" />} />
-        <Route path="/register" element={!user ? <Register /> : <Navigate to="/" />} />
-        <Route path="/auth/callback" element={<AuthCallback />} />
+          {/* Public Routes (also using layout) */}
+          <Route path="/login" element={!user ? <Login /> : <Navigate to="/" />} />
+          <Route path="/register" element={!user ? <Register /> : <Navigate to="/" />} />
+          <Route path="/auth/callback" element={<AuthCallback />} />
+        </Route>
       </Routes>
     </div>
   )

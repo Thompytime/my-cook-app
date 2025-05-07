@@ -11,6 +11,7 @@ const Login = () => {
   const handleLogin = async (e) => {
     e.preventDefault()
     const { error } = await supabase.auth.signInWithPassword({ email, password })
+
     if (!error) {
       navigate('/')
     } else {
@@ -19,25 +20,25 @@ const Login = () => {
   }
 
   return (
-    <div className="login-form">
+    <>
       <h2>Login</h2>
       <form onSubmit={handleLogin}>
-      <input
-        type="email"
-        placeholder="Email"
-        value={email}
-        onChange={(e) => setEmail(e.target.value)}
-        required
-        autoComplete="email"
-      />
-      <input
-        type="password"
-        placeholder="Password"
-        value={password}
-        onChange={(e) => setPassword(e.target.value)}
-        required
-        autoComplete="current-password" // On Login
-      />
+        <input
+          type="email"
+          placeholder="Email"
+          value={email}
+          onChange={(e) => setEmail(e.target.value)}
+          required
+          autoComplete="email"
+        />
+        <input
+          type="password"
+          placeholder="Password"
+          value={password}
+          onChange={(e) => setPassword(e.target.value)}
+          required
+          autoComplete="current-password"
+        />
         <button type="submit">Login</button>
       </form>
 
@@ -47,7 +48,7 @@ const Login = () => {
           Create new account
         </button>
       </p>
-    </div>
+    </>
   )
 }
 
