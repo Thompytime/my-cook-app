@@ -1,3 +1,4 @@
+// src/App.js
 import React from 'react'
 import { Routes, Route, Link, Navigate, Outlet, useNavigate } from 'react-router-dom'
 import { AuthContext } from './contexts/AuthContext'
@@ -9,19 +10,23 @@ import ProtectedRoute from './components/ProtectedRoute'
 import AuthCallback from './components/AuthCallback'
 import RateMeals from './components/RateMeals'
 import RateMealForm from './components/RateMealForm'
-import ErrorBoundary from './components/ErrorBoundary'
+
+// Import styles
+import './styles.css'
 
 // Layout wrapper that includes side images
-const LayoutWithSideImages = () => {
+const LayoutWithSideImages = ({ user, handleLogout }) => {
   return (
     <>
-      {/* Logo above everything */}
+      {/* Logo + Logout Button */}
       <div className="top-logo-container">
-        <img
-          src="/cooklogo.png"
-          alt="COOK Logo"
-          className="top-logo"
-        />
+        <img src="/cooklogo.png" alt="COOK Logo" className="top-logo" />
+
+        {user && (
+          <button onClick={handleLogout} className="logout-button">
+            Logout
+          </button>
+        )}
       </div>
 
       {/* Main layout container */}
@@ -36,7 +41,7 @@ const LayoutWithSideImages = () => {
         {/* Center Content Wrapper */}
         <div className="center-wrapper">
           <div className="center-content">
-            <Outlet /> {/* This renders Login/Register/Home */}
+            <Outlet /> {/* This renders Login/Register/Home/etc */}
           </div>
 
           {/* Description below form */}
@@ -59,6 +64,7 @@ const LayoutWithSideImages = () => {
     </>
   )
 }
+
 function App() {
   const { user, loading, username } = React.useContext(AuthContext)
   const navigate = useNavigate()
@@ -76,40 +82,35 @@ function App() {
       <nav>
         <h2>COOK Meals Rankings</h2>
         <div>
-        {user ? (
-        <>
-          <span style={{ marginRight: 10 }}>
-            Hi, {username ? username : '...'}
-          </span>
-          <button onClick={handleLogout}>Logout</button>
-        </>
-      ) : (
-        <>
-          <Link to="/register">Register</Link>
-          <Link to="/login">Login</Link>
-        </>
-      )}
+          {user ? (
+            <span style={{ marginRight: 10 }}>
+              Hi, {username ? username : '...'}
+            </span>
+          ) : (
+            <>
+              <Link to="/register">Register</Link>
+              <Link to="/login">Login</Link>
+            </>
+          )}
         </div>
       </nav>
 
       {/* Routes wrapped in LayoutWithSideImages */}
-      <ErrorBoundary>
       <Routes>
-  <Route element={<LayoutWithSideImages />}>
-    {/* Protected Home */}
-    <Route path="/" element={<ProtectedRoute><Home /></ProtectedRoute>} />
+        <Route element={<LayoutWithSideImages user={user} handleLogout={handleLogout} />}>
+          {/* Protected Home */}
+          <Route path="/" element={<ProtectedRoute><Home /></ProtectedRoute>} />
 
-    {/* Protected Rate Meals Page */}
-    <Route path="/rate" element={<ProtectedRoute><RateMeals /></ProtectedRoute>} />
-    <Route path="/rate/:id" element={<ProtectedRoute><RateMealForm /></ProtectedRoute>} />
+          {/* Protected Rate Meals Page */}
+          <Route path="/rate" element={<ProtectedRoute><RateMeals /></ProtectedRoute>} />
+          <Route path="/rate/:id" element={<ProtectedRoute><RateMealForm /></ProtectedRoute>} />
+        </Route>
 
-    {/* Public Routes */}
-    <Route path="/login" element={!user ? <Login /> : <Navigate to="/" />} />
-    <Route path="/register" element={!user ? <Register /> : <Navigate to="/" />} />
-    <Route path="/auth/callback" element={<AuthCallback />} />
-  </Route>
-</Routes>
-</ErrorBoundary>
+        {/* Public Routes */}
+        <Route path="/login" element={!user ? <Login /> : <Navigate to="/" />} />
+        <Route path="/register" element={!user ? <Register /> : <Navigate to="/" />} />
+        <Route path="/auth/callback" element={<AuthCallback />} />
+      </Routes>
     </div>
   )
 }

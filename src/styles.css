@@ -41,18 +41,36 @@ button {
   background: white;
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
   z-index: 5;
+  position: relative;
 }
 
 .top-logo {
-  width: 250px; /* Wider than before */
-  height: auto; /* Keep aspect ratio */
+  width: 250px;
+  height: auto;
+}
+
+.logout-button {
+  position: absolute;
+  top: 20px;
+  right: 20px;
+  background-color: #e74c3c;
+  color: white;
+  border: none;
+  padding: 0.5rem 1rem;
+  font-size: 1rem;
+  border-radius: 5px;
+  cursor: pointer;
+}
+
+.logout-button:hover {
+  background-color: #c0392b;
 }
 
 /* Main layout container */
 .main-layout {
   display: flex;
   justify-content: space-between;
-  align-items: flex-start; /* Align top with logo */
+  align-items: flex-start;
   min-height: calc(100vh - 60px);
   padding: 1rem 2rem;
   box-sizing: border-box;
@@ -64,7 +82,7 @@ button {
   display: flex;
   flex-direction: column;
   gap: 10px;
-  width: 25%; /* Increased from 20% */
+  width: 25%;
 }
 
 .left-images {
@@ -78,11 +96,11 @@ button {
 /* Individual meal images */
 .side-image {
   width: 100%;
-  height: 50%; /* Make them half as tall */
+  height: 50%;
   border-radius: 8px;
   box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-  object-fit: cover; /* Maintain quality while resizing */
-  aspect-ratio: 3 / 2; /* Wider rectangle shape */
+  object-fit: cover;
+  aspect-ratio: 3 / 2;
 }
 
 /* Center content wrapper */
@@ -105,25 +123,43 @@ button {
 }
 
 /* Description under form */
-/* Description under form */
 .form-description {
-  margin-top: 30px; /* Moved down a bit more for spacing */
+  margin-top: 30px;
   text-align: center;
-  font-size: 1.1rem; /* Bigger text */
-  color: #2c3e50; /* Richer dark blue-gray instead of plain black */
+  font-size: 1.1rem;
+  color: #2c3e50;
   max-width: 450px;
-  font-family: 'Georgia', 'Segoe Script', cursive; /* Creative, elegant font */
+  font-family: 'Georgia', 'Segoe Script', cursive;
   line-height: 1.5;
   padding: 0 10px;
 }
 
 /* Inputs inside forms */
-input {
+input,
+textarea {
   display: block;
   width: 100%;
   margin-bottom: 1rem;
   padding: 0.5rem;
   font-size: 1rem;
+}
+
+/* Links and buttons */
+.home-buttons {
+  margin-top: 2rem;
+  text-align: center;
+}
+
+.rate-meals-button {
+  display: inline-block;
+  padding: 1rem 2rem;
+  background-color: #3498db;
+  color: white;
+  border: none;
+  border-radius: 5px;
+  font-size: 1.2rem;
+  cursor: pointer;
+  text-decoration: none;
 }
 
 /* Responsive Design */
@@ -149,21 +185,4 @@ input {
   .form-description {
     padding: 0 1rem;
   }
-}
-
-.home-buttons {
-  margin-top: 2rem;
-  text-align: center;
-}
-
-.rate-meals-button {
-  display: inline-block;
-  padding: 1rem 2rem;
-  background-color: #3498db;
-  color: white;
-  border: none;
-  border-radius: 5px;
-  font-size: 1.2rem;
-  cursor: pointer;
-  text-decoration: none;
 }
