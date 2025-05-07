@@ -30,49 +30,49 @@ export const AuthProvider = ({ children }) => {
     setLoading(false)
   }
 
-  // Listen for auth changes
-  useEffect(() => {
-    getInitialUser()
+  // Inside useEffect after supabase.auth.onAuthStateChange
+useEffect(() => {
+  getInitialUser()
 
-    const { data: authListener } = supabase.auth.onAuthStateChange(
-      async (_event, session) => {
-        const currentUser = session?.user ?? null
-        console.log("Auth event:", _event)
-        console.log("Current user:", currentUser)
+  const { data: authListener } = supabase.auth.onAuthStateChange(
+    async (_event, session) => {
+      const currentUser = session?.user ?? null
+      console.log("Session event:", _event)
+      console.log("Current user:", currentUser)
 
-        setUser(currentUser)
-        setUsername(null)
+      setUser(currentUser)
+      setUsername(null)
 
-        if (currentUser) {
-          const { data: profileData, error } = await supabase
-            .from('profiles')
-            .select('username')
-            .eq('id', currentUser.id)
-            .single()
+      if (currentUser) {
+        const { data: profileData, error } = await supabase
+          .from('profiles')
+          .select('username')
+          .eq('id', currentUser.id)
+          .single()
 
-          if (!error && profileData?.username) {
-            setUsername(profileData.username)
-          }
+        if (!error && profileData?.username) {
+          setUsername(profileData.username)
         }
-
-        setLoading(false)
       }
-    )
 
-    // Optional: Refresh session when tab becomes visible again
-    const handleVisibilityChange = async () => {
-      if (document.visibilityState === 'visible') {
-        await supabase.auth.refreshSession()
-      }
+      setLoading(false)
     }
+  )
 
-    document.addEventListener('visibilitychange', handleVisibilityChange)
-
-    return () => {
-      authListener.subscription.unsubscribe()
-      document.removeEventListener('visibilitychange', handleVisibilityChange)
+  // 💡 Refresh session when user returns to tab
+  const handleVisibilityChange = async () => {
+    if (document.visibilityState === 'visible') {
+      await supabase.auth.refreshSession()
     }
-  }, [])
+  }
+
+  document.addEventListener('visibilitychange', handleVisibilityChange)
+
+  return () => {
+    authListener.subscription.unsubscribe()
+    document.removeEventListener('visibilitychange', handleVisibilityChange)
+  }
+}, [])
 
   const value = { user, loading, username }
 
