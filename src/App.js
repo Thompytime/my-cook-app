@@ -74,8 +74,19 @@ function App() {
 
   const handleLogout = async () => {
     console.log("Logging out...")
-    await supabase.auth.signOut()
-    navigate('/login')
+    
+    // Step 1: Sign out from Supabase
+    const { error } = await supabase.auth.signOut({ scope: 'global' })
+    if (error) {
+      console.error("Logout failed:", error.message)
+      alert("Could not log out. Please try again.")
+      return
+    }
+  
+    // Step 2: Delay navigation slightly to let context refresh
+    setTimeout(() => {
+      navigate('/login')
+    }, 500)
   }
 
   if (loading) return <div>Loading...</div>
