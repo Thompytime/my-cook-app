@@ -83,20 +83,21 @@ function App() {
     <div className="app">
       {/* Navigation Bar */}
       <nav>
-        <h2>COOK Meals Rankings</h2>
-        <div>
-          {user ? (
-            <span style={{ marginRight: 10 }}>
-              Hi, {username ? username : '...'}
-            </span>
-          ) : (
-            <>
-              <Link to="/register">Register</Link>
-              <Link to="/login">Login</Link>
-            </>
-          )}
-        </div>
-      </nav>
+  <h2>COOK Meals Rankings</h2>
+  <div>
+    {user ? (
+      <>
+        <span style={{ marginRight: 10 }}>Hi, {username || '...'}!</span>
+        <button onClick={handleLogout}>Logout</button>
+      </>
+    ) : (
+      <>
+        <Link to="/register">Register</Link>
+        <Link to="/login">Login</Link>
+      </>
+    )}
+  </div>
+</nav>
 
       {/* All routes use the same layout */}
       <Routes>
