@@ -33,53 +33,61 @@ export const AuthProvider = ({ children }) => {
   // Listen for visibility change or tab focus
   useEffect(() => {
     getInitialUser()
-
+  
     const { data: authListener } = supabase.auth.onAuthStateChange(
       async (_event, session) => {
         const currentUser = session?.user ?? null
         console.log("Auth event:", _event)
         console.log("Current user:", currentUser)
-
+  
         setUser(currentUser)
-        setUsername(null)
-
+  
         if (currentUser) {
           const { data: profileData, error } = await supabase
             .from('profiles')
             .select('username')
             .eq('id', currentUser.id)
             .single()
-
+  
           if (!error && profileData?.username) {
             setUsername(profileData.username)
           }
         }
-
+  
         setLoading(false)
       }
     )
-
-    // 💡 Force session refresh when tab becomes visible or focused
+  
+    // 💡 Refresh session AND context when user returns
     const handleVisibilityChange = async () => {
       if (document.visibilityState === 'visible') {
-        await supabase.auth.refreshSession()
+        const { data } = await supabase.auth.getUser()
+        const currentUser = data?.user ?? null
+        setUser(currentUser)
+  
+        if (currentUser) {
+          const { data: profileData, error } = await supabase
+            .from('profiles')
+            .select('username')
+            .eq('id', currentUser.id)
+            .single()
+  
+          if (!error && profileData?.username) {
+            setUsername(profileData.username)
+          }
+        }
       }
     }
-
-    const handleTabFocus = async () => {
-      await supabase.auth.refreshSession()
-    }
-
+  
     document.addEventListener('visibilitychange', handleVisibilityChange)
-    window.addEventListener('focus', handleTabFocus)
-
+    window.addEventListener('focus', handleVisibilityChange)
+  
     return () => {
       authListener.subscription.unsubscribe()
       document.removeEventListener('visibilitychange', handleVisibilityChange)
-      window.removeEventListener('focus', handleTabFocus)
+      window.removeEventListener('focus', handleVisibilityChange)
     }
   }, [])
-
   const value = { user, loading, username }
 
   return (

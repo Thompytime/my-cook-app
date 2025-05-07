@@ -73,6 +73,7 @@ function App() {
   const navigate = useNavigate()
 
   const handleLogout = async () => {
+    console.log("Logging out...")
     await supabase.auth.signOut()
     navigate('/login')
   }
